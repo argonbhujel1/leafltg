@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container reveal">
+        <p class="section-label">Process</p>
+        <h1>FROM FALLEN LEAF<br>TO FINISHED PRODUCT.</h1>
+        <p>A clear production path — from collection of betel-nut leaves to packaged duna and tapari.</p>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        <div class="process-detailed">
+            <div class="process-row reveal">
+                <div class="process-num-lg">01</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Collection</h2>
+                    <p style="color:var(--muted-text);">Fallen betel-nut leaves are collected from agricultural areas around Letang. Creating demand for this by-product supports local collection activity.</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">02</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Sorting</h2>
+                    <p style="color:var(--muted-text);">Leaves are sorted for suitability. Only leaves appropriate for forming into food-service products proceed to the next stage.</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">03</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Preparation</h2>
+                    <p style="color:var(--muted-text);">Selected leaves are prepared for machine forming, ensuring they are ready for consistent shaping into duna and tapari.</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">04</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Forming</h2>
+                    <p style="color:var(--muted-text);">Prepared leaves are shaped using production equipment into traditional leaf bowls (duna) and plates (tapari).</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">05</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Quality Checking</h2>
+                    <p style="color:var(--muted-text);">Finished pieces are checked for consistency and suitability for food-service applications.</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">06</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Packaging</h2>
+                    <p style="color:var(--muted-text);">Products are packaged for distribution — ready for local markets, events, and bulk business orders.</p>
+                </div>
+            </div>
+            <div class="process-row reveal">
+                <div class="process-num-lg">07</div>
+                <div>
+                    <h2 style="font-size:1.35rem;margin-bottom:0.5rem;">Distribution</h2>
+                    <p style="color:var(--muted-text);">Packaged products reach customers and partners, carrying value from Letang’s leaves to wider markets.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section--dark cta-section">
+    <div class="container reveal">
+        <h2 class="section-heading">Interested in our products?</h2>
+        <div class="cta-actions">
+            <a href="{{ url_for('contact.contact') }}" class="btn btn--orange btn--lg">Get in Touch</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

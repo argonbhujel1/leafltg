@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page_title | default('Leaf Letang Enterprises') }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ page_description | default('Leaf Letang Enterprises — sustainable leaf-based products from Letang, Nepal.') }}{% endblock %}">
+    <link rel="canonical" href="{{ request.url_root.rstrip('/') }}{{ request.path }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ page_title | default('Leaf Letang Enterprises') }}">
+    <meta property="og:description" content="{{ page_description | default('Sustainable leaf products from Nepal') }}">
+    <meta property="og:url" content="{{ request.url_root.rstrip('/') }}{{ request.path }}">
+    <meta property="og:site_name" content="Leaf Letang Enterprises">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ page_title | default('Leaf Letang Enterprises') }}">
+    <meta name="twitter:description" content="{{ page_description | default('Sustainable leaf products from Nepal') }}">
+
+    <!-- Favicons -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <meta name="theme-color" content="#159447">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    {% block extra_css %}{% endblock %}
+
+    <!-- JSON-LD Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Leaf Letang Enterprises",
+        "url": "{{ request.url_root.rstrip('/') }}",
+        "logo": "{{ url_for('static', filename='images/logo.png', _external=True) }}",
+        "description": "Sustainable manufacturing of biodegradable leaf-based food-service products from betel-nut leaves in Letang, Morang, Nepal.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Letang Municipality",
+            "addressRegion": "Morang, Koshi Province",
+            "addressCountry": "NP"
+        },
+        "foundingDate": "2021"
+    }
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" role="banner">
+        <div class="container header-inner">
+            <a href="{{ url_for('main.index') }}" class="logo-link" aria-label="Leaf Letang Enterprises home">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Leaf Letang Enterprises — Est. 2078" width="180" height="77">
+            </a>
+
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="main-nav" role="navigation" aria-label="Main">
+                <ul class="nav-list">
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.products') }}">Products</a></li>
+                    <li><a href="{{ url_for('main.process') }}">Process</a></li>
+                    <li><a href="{{ url_for('main.sustainability') }}">Sustainability</a></li>
+                    <li><a href="{{ url_for('main.community') }}">Community</a></li>
+                    <li><a href="{{ url_for('main.gallery') }}">Gallery</a></li>
+                    <li class="nav-cta"><a href="{{ url_for('contact.contact') }}" class="btn btn--primary">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages" role="status" aria-live="polite">
+        {% for category, message in messages %}
+        <div class="flash flash--{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <main id="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Leaf Letang Enterprises" width="160" height="68">
+                    </div>
+                    <p class="footer-tagline">From Local Leaves to Sustainable Value.</p>
+                    <p style="font-size:0.9rem;">Letang Municipality<br>Morang, Koshi Province<br>Nepal</p>
+                </div>
+                <div>
+                    <h3 class="footer-heading">Explore</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('main.index') }}">Home</a>
+                        <a href="{{ url_for('main.about') }}">About</a>
+                        <a href="{{ url_for('main.products') }}">Products</a>
+                        <a href="{{ url_for('main.process') }}">Process</a>
+                        <a href="{{ url_for('main.sustainability') }}">Sustainability</a>
+                        <a href="{{ url_for('main.community') }}">Community</a>
+                        <a href="{{ url_for('main.gallery') }}">Gallery</a>
+                        <a href="{{ url_for('contact.contact') }}">Contact</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-heading">Products</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('main.products') }}">Duna</a>
+                        <a href="{{ url_for('main.products') }}">Tapari</a>
+                        <a href="{{ url_for('main.products') }}">Bulk Orders</a>
+                        <a href="{{ url_for('contact.contact') }}">Request Information</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ current_year }} Leaf Letang Enterprises. All rights reserved.</p>
+                <p class="footer-made">Made in Letang, Nepal.</p>
+            </div>
+            <div class="footer-credit">
+                <p>
+                    Independently structured and engineered by
+                    <a href="https://argan.com.np" target="_blank" rel="noopener noreferrer">Argan</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

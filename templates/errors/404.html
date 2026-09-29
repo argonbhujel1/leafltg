@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section section--cream" style="min-height:60vh;display:flex;align-items:center;">
+    <div class="container text-center reveal">
+        <p class="section-label">404</p>
+        <h1 class="section-heading">PAGE NOT FOUND</h1>
+        <p class="section-sub" style="margin-left:auto;margin-right:auto;">
+            The page you're looking for doesn't exist or may have moved.
+        </p>
+        <a href="{{ url_for('main.index') }}" class="btn btn--primary btn--lg">Back to Home</a>
+    </div>
+</section>
+{% endblock %}

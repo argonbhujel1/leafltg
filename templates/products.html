@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container reveal">
+        <p class="section-label">Products</p>
+        <h1>LEAF-BASED FOOD-SERVICE PRODUCTS</h1>
+        <p>Biodegradable duna and tapari made from betel-nut leaves — designed for everyday use and traditional occasions.</p>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        {% for product in products %}
+        <article class="reveal" class="product-detail-row" style="margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid var(--border);">
+            <div class="product-card__img" style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
+                {% if product.image %}
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;">
+                {% else %}
+                <div style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--light-green);color:var(--dark-green);font-weight:600;">{{ product.name }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <h2 style="font-size:clamp(1.5rem,3vw,2rem);margin-bottom:1rem;">{{ product.name }}</h2>
+                <p style="color:var(--muted-text);margin-bottom:1.5rem;font-size:1.05rem;">{{ product.description }}</p>
+                <a href="{{ url_for('contact.contact') }}" class="btn btn--primary">Inquire About {{ product.name }}</a>
+            </div>
+        </article>
+        {% else %}
+        <div class="products-grid">
+            <article class="product-card reveal">
+                <div class="product-card__img"><img src="{{ url_for('static', filename='images/products/duna-placeholder.svg') }}" alt="Duna" loading="lazy"></div>
+                <div class="product-card__body">
+                    <h3 class="product-card__title">Duna</h3>
+                    <p class="product-card__desc">Traditional leaf bowls made from naturally sourced betel-nut leaves.</p>
+                    <a href="{{ url_for('contact.contact') }}" class="btn btn--outline">Inquire</a>
+                </div>
+            </article>
+            <article class="product-card reveal">
+                <div class="product-card__img"><img src="{{ url_for('static', filename='images/products/tapari-placeholder.svg') }}" alt="Tapari" loading="lazy"></div>
+                <div class="product-card__body">
+                    <h3 class="product-card__title">Tapari</h3>
+                    <p class="product-card__desc">Leaf plates designed for food service, traditional occasions, events and everyday use.</p>
+                    <a href="{{ url_for('contact.contact') }}" class="btn btn--outline">Inquire</a>
+                </div>
+            </article>
+            <article class="product-card reveal">
+                <div class="product-card__img"><img src="{{ url_for('static', filename='images/products/bulk-placeholder.svg') }}" alt="Bulk" loading="lazy"></div>
+                <div class="product-card__body">
+                    <h3 class="product-card__title">Bulk / Custom Orders</h3>
+                    <p class="product-card__desc">Talk to us about larger quantities and business requirements.</p>
+                    <a href="{{ url_for('contact.contact') }}" class="btn btn--outline">Inquire</a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section section--dark cta-section">
+    <div class="container reveal">
+        <h2 class="section-heading">Need bulk supply or a custom discussion?</h2>
+        <div class="cta-actions">
+            <a href="{{ url_for('contact.contact') }}" class="btn btn--orange btn--lg">Contact Us</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

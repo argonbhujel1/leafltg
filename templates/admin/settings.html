@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="admin-header"><h1>Site Settings</h1></div>
+<p style="color:#66736A;margin-bottom:1.5rem;max-width:560px;">
+    Key-value settings stored in the database. Company contact details and secrets remain in environment variables and are not edited here.
+</p>
+<div class="admin-form">
+    <h2 style="font-size:1.1rem;margin-bottom:1rem;">Add / Update Setting</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">{{ form.key.label }}{{ form.key(class='form-control', placeholder='e.g. homepage_note') }}</div>
+        <div class="form-group">{{ form.value.label }}{{ form.value(class='form-control') }}</div>
+        <button type="submit" class="btn btn--primary">{{ form.submit.label.text }}</button>
+    </form>
+</div>
+<table class="admin-table">
+    <thead>
+        <tr><th>Key</th><th>Value</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for s in settings %}
+        <tr>
+            <td><code>{{ s.key }}</code></td>
+            <td style="max-width:320px;word-break:break-word;">{{ s.value }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.delete_setting', sid=s.id) }}" data-confirm="Delete this setting?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" style="color:#66736A;">No custom settings yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="admin-header"><h1>Products</h1></div>
+<div class="admin-form">
+    <h2 style="font-size:1.1rem;margin-bottom:0.5rem;">
+        {% if edit_product %}Edit: {{ edit_product.name }}{% else %}Add Product{% endif %}
+    </h2>
+    <p style="font-size:0.85rem;color:#66736A;margin-bottom:1rem;">
+        Image: PC वा phone बाट select गर्नुहोस् (optional). Edit गर्दा नयाँ image ले पुरानो replace हुन्छ.
+    </p>
+    <form method="POST" enctype="multipart/form-data"
+          action="{% if edit_product %}{{ url_for('admin.edit_product', pid=edit_product.id) }}{% else %}{{ url_for('admin.products') }}{% endif %}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">{{ form.name.label }}{{ form.name(class='form-control') }}</div>
+        <div class="form-group">{{ form.slug.label }}{{ form.slug(class='form-control', placeholder='duna') }}</div>
+        <div class="form-group">{{ form.description.label }}{{ form.description(class='form-control') }}</div>
+        <div class="form-group">
+            {{ form.image.label }}
+            {% if edit_product and edit_product.image %}
+            <div style="margin-bottom:0.5rem;">
+                <img src="{{ url_for('static', filename='images/' + edit_product.image) }}"
+                     alt="" style="max-height:80px;border-radius:6px;border:1px solid #e0e0e0;">
+            </div>
+            {% endif %}
+            {{ form.image(class='form-control form-file', accept='image/jpeg,image/png,image/webp,image/gif') }}
+        </div>
+        <div class="form-group">{{ form.is_active() }} {{ form.is_active.label }}</div>
+        <div class="form-group">{{ form.sort_order.label }}{{ form.sort_order(class='form-control') }}</div>
+        <button type="submit" class="btn btn--primary">{{ form.submit.label.text }}</button>
+        {% if edit_product %}
+        <a href="{{ url_for('admin.products') }}" class="btn btn--outline">Cancel</a>
+        {% endif %}
+    </form>
+</div>
+<table class="admin-table">
+    <thead>
+        <tr><th>Image</th><th>Name</th><th>Slug</th><th>Active</th><th>Order</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr>
+            <td>
+                {% if p.image %}
+                <img src="{{ url_for('static', filename='images/' + p.image) }}" alt="" width="48" height="36"
+                     style="object-fit:cover;border-radius:4px;">
+                {% else %}—{% endif %}
+            </td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.slug }}</td>
+            <td>{{ 'Yes' if p.is_active else 'No' }}</td>
+            <td>{{ p.sort_order }}</td>
+            <td style="white-space:nowrap;">
+                <a href="{{ url_for('admin.edit_product', pid=p.id) }}" class="btn btn--outline btn-sm">Edit</a>
+                <form method="POST" action="{{ url_for('admin.toggle_product', pid=p.id) }}" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Toggle</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.delete_product', pid=p.id) }}" style="display:inline;" data-confirm="Delete this product?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="color:#66736A;">No products yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

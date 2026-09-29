@@ -1,0 +1,214 @@
+/* Responsive adjustments for Leaf Letang Enterprises */
+
+@media (max-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .hero-visual {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .process-timeline {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .sus-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 68px;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background: var(--cream);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem;
+        transform: translateY(-120%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+        box-shadow: var(--shadow-md);
+        max-height: calc(100vh - var(--header-height));
+        overflow-y: auto;
+    }
+
+    .nav.open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+    }
+
+    .nav-list a {
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
+    }
+
+    .nav-cta {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    .nav-cta .btn {
+        width: 100%;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .hero {
+        padding: 3rem 0 3.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .section {
+        padding: 3.5rem 0;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .process-timeline {
+        grid-template-columns: 1fr;
+    }
+
+    .sus-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .page-hero {
+        padding: 2.5rem 0 2rem;
+    }
+
+    .founders-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .flow-chain {
+        flex-direction: column;
+    }
+
+    .flow-arrow {
+        transform: rotate(90deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1.15rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .founders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-actions {
+        flex-direction: column;
+    }
+
+    .cta-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo-link img {
+        height: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+  .products.html article[style*="grid-template-columns"],
+  section .reveal[style*="grid-template-columns:1fr 1.2fr"] {
+    display: block !important;
+  }
+}
+
+
+/* Form selects & inputs — easier on phone */
+@media (max-width: 768px) {
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+        min-height: 48px;
+        font-size: 16px; /* prevents iOS zoom */
+    }
+    .form-group textarea {
+        min-height: 120px;
+    }
+    .filter-btn {
+        min-height: 44px;
+        padding: 0.65rem 1.1rem;
+    }
+}

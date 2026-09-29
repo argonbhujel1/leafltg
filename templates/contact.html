@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container reveal">
+        <p class="section-label">Contact</p>
+        <h1>LET'S WORK TOGETHER.</h1>
+        <p>Product inquiries, bulk orders, partnerships and distribution — we look forward to hearing from you.</p>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="reveal">
+                <h2 style="font-size:1.35rem;margin-bottom:1.5rem;">Get in Touch</h2>
+                <div class="contact-info-item">
+                    <h4>Location</h4>
+                    <p>Letang Municipality<br>Morang, Koshi Province<br>Nepal</p>
+                </div>
+                {% if company_email %}
+                <div class="contact-info-item">
+                    <h4>Email</h4>
+                    <p><a href="mailto:{{ company_email }}">{{ company_email }}</a></p>
+                </div>
+                {% endif %}
+                {% if company_phone %}
+                <div class="contact-info-item">
+                    <h4>Phone</h4>
+                    <p><a href="tel:{{ company_phone }}">{{ company_phone }}</a></p>
+                </div>
+                {% endif %}
+                <div class="contact-info-item">
+                    <h4>Inquiry Types</h4>
+                    <p style="font-size:0.95rem;color:var(--muted-text);">
+                        Product Inquiry · Bulk Order · Business Partnership · Distribution · Export Inquiry · General Inquiry
+                    </p>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <form method="POST" action="{{ url_for('contact.contact') }}" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.name.label }}
+                        {{ form.name(class='form-control', placeholder='Your full name') }}
+                        {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.email.label }}
+                        {{ form.email(class='form-control', placeholder='you@example.com') }}
+                        {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.phone.label }}
+                        {{ form.phone(class='form-control', placeholder='Optional') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.inquiry_type.label }}
+                        {{ form.inquiry_type(class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.message.label }}
+                        {{ form.message(class='form-control', placeholder='Tell us about your requirements...') }}
+                        {% if form.message.errors %}
+                        <div class="form-error">{{ form.message.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--lg">{{ form.submit.label.text }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

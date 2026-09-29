@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="admin-header">
+    <h1>Contact Messages</h1>
+</div>
+{% if messages %}
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in messages %}
+        <tr>
+            <td>{{ m.name }}{% if not m.is_read %} <span class="badge badge--unread">New</span>{% endif %}</td>
+            <td><a href="mailto:{{ m.email }}">{{ m.email }}</a></td>
+            <td>{{ m.inquiry_type }}</td>
+            <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ m.message }}">{{ m.message[:80] }}{% if m.message|length > 80 %}…{% endif %}</td>
+            <td>{{ m.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td style="white-space:nowrap;">
+                {% if not m.is_read %}
+                <form method="POST" action="{{ url_for('admin.mark_read', msg_id=m.id) }}" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Mark Read</button>
+                </form>
+                {% endif %}
+                <form method="POST" action="{{ url_for('admin.delete_message', msg_id=m.id) }}" style="display:inline;" data-confirm="Delete this message?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color:#66736A;">No messages yet.</p>
+{% endif %}
+{% endblock %}

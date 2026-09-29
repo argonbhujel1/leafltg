@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="admin-header">
+    <h1>Dashboard</h1>
+</div>
+<div class="stat-boxes">
+    <div class="stat-box">
+        <div class="num">{{ total_messages }}</div>
+        <div class="lbl">Total Messages</div>
+    </div>
+    <div class="stat-box">
+        <div class="num">{{ unread }}</div>
+        <div class="lbl">Unread</div>
+    </div>
+    <div class="stat-box">
+        <div class="num">{{ products_count }}</div>
+        <div class="lbl">Products</div>
+    </div>
+    <div class="stat-box">
+        <div class="num">{{ gallery_count }}</div>
+        <div class="lbl">Gallery Images</div>
+    </div>
+</div>
+<h2 style="font-size:1.1rem;margin-bottom:1rem;">Recent Messages</h2>
+{% if recent %}
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in recent %}
+        <tr>
+            <td>{{ m.name }}</td>
+            <td>{{ m.inquiry_type }}</td>
+            <td>{{ m.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if m.is_read %}
+                <span class="badge badge--read">Read</span>
+                {% else %}
+                <span class="badge badge--unread">Unread</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color:#66736A;">No messages yet.</p>
+{% endif %}
+{% endblock %}

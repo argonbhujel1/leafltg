@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#EAF7EE"/>
+  <ellipse cx="200" cy="160" rx="110" ry="70" fill="none" stroke="#159447" stroke-width="4"/>
+  <ellipse cx="200" cy="150" rx="90" ry="55" fill="none" stroke="#087A3A" stroke-width="2"/>
+  <text x="200" y="250" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#087A3A">Duna</text>
+</svg>

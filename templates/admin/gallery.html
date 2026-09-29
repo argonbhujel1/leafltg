@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block content %}
+<div class="admin-header"><h1>Gallery</h1></div>
+<div class="admin-form">
+    <h2 style="font-size:1.1rem;margin-bottom:0.5rem;">Upload Image</h2>
+    <p style="font-size:0.85rem;color:#66736A;margin-bottom:1rem;">
+        PC वा phone बाट photo select गर्नुहोस् (jpg, png, webp, gif — max 8 MB).
+    </p>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">{{ form.title.label }}{{ form.title(class='form-control', placeholder='Optional title') }}</div>
+        <div class="form-group">
+            {{ form.image.label }}
+            {{ form.image(class='form-control form-file', accept='image/jpeg,image/png,image/webp,image/gif') }}
+            {% if form.image.errors %}
+            <div style="color:#c0392b;font-size:0.85rem;margin-top:0.35rem;">{{ form.image.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">{{ form.category.label }}{{ form.category(class='form-control') }}</div>
+        <button type="submit" class="btn btn--primary">{{ form.submit.label.text }}</button>
+    </form>
+</div>
+<table class="admin-table">
+    <thead>
+        <tr><th>Preview</th><th>Title</th><th>File</th><th>Category</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for g in images %}
+        <tr>
+            <td>
+                <img src="{{ url_for('static', filename='images/gallery/' + g.image) }}"
+                     alt="" width="64" height="48"
+                     style="object-fit:cover;border-radius:6px;border:1px solid #e0e0e0;">
+            </td>
+            <td>{{ g.title or '—' }}</td>
+            <td style="font-size:0.8rem;word-break:break-all;">{{ g.image }}</td>
+            <td>{{ g.category }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.delete_gallery', gid=g.id) }}" data-confirm="Remove this image?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="color:#66736A;">No gallery images yet. Upload from PC or phone above.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

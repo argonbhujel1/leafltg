@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>{% block title %}Admin{% endblock %} | Leaf Letang Enterprises</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-responsive.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="admin-body">
+    {% if session.get('admin_logged_in') %}
+    <div class="admin-layout">
+        <aside class="admin-sidebar" aria-label="Admin navigation">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Leaf Letang Enterprises">
+                <span class="admin-badge">Admin</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('admin.messages') }}" class="{% if request.endpoint == 'admin.messages' %}active{% endif %}">Messages</a>
+                <a href="{{ url_for('admin.products') }}" class="{% if request.endpoint == 'admin.products' %}active{% endif %}">Products</a>
+                <a href="{{ url_for('admin.gallery') }}" class="{% if request.endpoint == 'admin.gallery' %}active{% endif %}">Gallery</a>
+                <a href="{{ url_for('admin.homepage') }}" class="{% if request.endpoint == 'admin.homepage' %}active{% endif %}">Homepage</a>
+                <a href="{{ url_for('admin.founders') }}" class="{% if request.endpoint == 'admin.founders' %}active{% endif %}">Founders</a>
+                <a href="{{ url_for('admin.settings') }}" class="{% if request.endpoint == 'admin.settings' %}active{% endif %}">Settings</a>
+                <a href="{{ url_for('admin.logout') }}">Logout</a>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <a href="{{ url_for('main.index') }}" target="_blank" rel="noopener">View public site ↗</a>
+            </div>
+        </aside>
+        <main class="admin-main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="admin-flashes">
+                {% for category, message in messages %}
+                <div class="flash flash--{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+        {% block unauthenticated %}{% endblock %}
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

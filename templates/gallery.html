@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container reveal">
+        <p class="section-label">Gallery</p>
+        <h1>VISUAL STORIES FROM LETANG.</h1>
+        <p>Factory, products, farmers, production and community — images will appear here as they are added.</p>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        <div class="gallery-filters reveal" role="tablist" aria-label="Filter gallery">
+            {% for cat in categories %}
+            <button type="button" class="filter-btn {% if cat == 'All' %}active{% endif %}" data-category="{{ cat }}" role="tab">{{ cat }}</button>
+            {% endfor %}
+        </div>
+
+        <div class="gallery-grid">
+            {% for img in images %}
+            <div class="gallery-item reveal"
+                 data-category="{{ img.category }}"
+                 data-full="{{ url_for('static', filename='images/gallery/' + img.image) }}"
+                 data-title="{{ img.title or '' }}"
+                 tabindex="0"
+                 role="button"
+                 aria-label="{{ img.title or 'Gallery image' }}">
+                <img src="{{ url_for('static', filename='images/gallery/' + img.image) }}"
+                     alt="{{ img.title or 'Leaf Letang gallery image' }}"
+                     loading="lazy"
+                     width="400" height="300">
+            </div>
+            {% else %}
+            <div class="gallery-empty reveal">
+                <p style="font-size:1.1rem;margin-bottom:0.5rem;">Gallery coming soon</p>
+                <p>Images of the factory, products, farmers and community will be published here. In the meantime, explore our products and story.</p>
+                <a href="{{ url_for('main.products') }}" class="btn btn--primary" style="margin-top:1.5rem;">View Products</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image lightbox">
+    <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+    <img src="" alt="">
+</div>
+{% endblock %}

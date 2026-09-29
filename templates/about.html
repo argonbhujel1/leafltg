@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container reveal">
+        <p class="section-label">Our Story</p>
+        <h1>FROM A LOCAL IDEA<br>TO A SUSTAINABLE ENTERPRISE.</h1>
+        <p>Rooted in Letang, Morang — where fallen leaves become the starting point for products and opportunity.</p>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        <div class="reveal" style="max-width:720px;">
+            <h2 class="section-heading" style="font-size:clamp(1.75rem,3vw,2.25rem);">The Story of Leaf Letang</h2>
+            <p style="margin-bottom:1.25rem;color:var(--muted-text);">
+                Leaf Letang Enterprises is rooted in Letang, Morang, where locally available betel-nut leaves become the starting point for sustainable products and economic opportunity.
+            </p>
+            <p style="margin-bottom:1.25rem;color:var(--muted-text);">
+                Founded by local entrepreneurs, the enterprise began production in November 2021 with a focus on transforming fallen leaves into duna and tapari.
+            </p>
+            <p style="margin-bottom:1.25rem;color:var(--muted-text);">
+                The business connects farmers, local resources, manufacturing and wider markets — creating value from something that would otherwise have limited economic use.
+            </p>
+            <p style="margin-bottom:1.25rem;color:var(--muted-text);">
+                Reported initial joint investment was approximately NPR 2.1 million. Historical production has been reported at approximately 10,000 pieces per day (this figure is historical and not presented as current capacity).
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section section--light">
+    <div class="container">
+        <div class="text-center reveal" style="margin-bottom:2.5rem;">
+            <p class="section-label">Leadership</p>
+            <h2 class="section-heading">Founded by Seven Entrepreneurs</h2>
+            <p class="section-sub" style="margin-left:auto;margin-right:auto;">
+                Leaf Letang Enterprises was established by a group of local entrepreneurs committed to turning agricultural by-products into useful products and community value.
+            </p>
+        </div>
+                <div class="founders-grid">
+            {% for f in founders %}
+            {% set fname = f.name if f.name is defined else f['name'] %}
+            {% set frole = f.role if f.role is defined else f.get('role', '') %}
+            {% set fimg = f.image if f.image is defined else f.get('image', None) %}
+            <div class="founder-card reveal">
+                {% if fimg %}
+                <img class="founder-photo" src="{{ url_for('static', filename='images/founders/' + fimg) }}"
+                     alt="{{ fname }}" width="80" height="80" loading="lazy">
+                {% else %}
+                <div class="founder-avatar" aria-hidden="true">
+                    {% set parts = fname.split(' ') %}
+                    {{ parts[0][0] }}{% if parts|length > 1 %}{{ parts[-1][0] }}{% endif %}
+                </div>
+                {% endif %}
+                <div class="founder-name">{{ fname }}</div>
+                {% if frole %}
+                <div class="founder-role">{{ frole }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section section--cream">
+    <div class="container">
+        <div class="reveal" style="max-width:720px;">
+            <h2 class="section-heading" style="font-size:clamp(1.75rem,3vw,2.25rem);">Local Resource Utilization</h2>
+            <p style="color:var(--muted-text);margin-bottom:1.25rem;">
+                The main raw material is fallen betel-nut (areca-nut) leaves. By creating demand for these leaves, the enterprise supports a local collection network and manufacturing activity in Letang Municipality.
+            </p>
+            <p style="color:var(--muted-text);">
+                From manufacturing to market expansion, the focus remains on practical products — duna and tapari — that serve everyday and traditional food-service needs while keeping value close to the community that supplies the leaves.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section section--dark cta-section">
+    <div class="container reveal">
+        <h2 class="section-heading">Want to work with us?</h2>
+        <div class="cta-actions">
+            <a href="{{ url_for('contact.contact') }}" class="btn btn--orange btn--lg">Contact Us</a>
+            <a href="{{ url_for('main.products') }}" class="btn btn--outline-light btn--lg">View Products</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

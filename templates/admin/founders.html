@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}Founders{% endblock %}
+{% block content %}
+<div class="admin-header"><h1>Founders</h1></div>
+<div class="admin-form">
+    <h2 style="font-size:1.1rem;margin-bottom:0.5rem;">
+        {% if edit_founder %}Edit: {{ edit_founder.name }}{% else %}Add Founder{% endif %}
+    </h2>
+    <p style="font-size:0.85rem;color:#66736A;margin-bottom:1rem;">
+        Photo: PC वा phone बाट upload गर्न मिल्छ. बिना photo initials देखिन्छ public site मा.
+    </p>
+    <form method="POST" enctype="multipart/form-data"
+          action="{% if edit_founder %}{{ url_for('admin.edit_founder', fid=edit_founder.id) }}{% else %}{{ url_for('admin.founders') }}{% endif %}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">{{ form.name.label }}{{ form.name(class='form-control') }}</div>
+        <div class="form-group">{{ form.role.label }}{{ form.role(class='form-control', placeholder='e.g. Director') }}</div>
+        <div class="form-group">
+            {{ form.image.label }}
+            {% if edit_founder and edit_founder.image %}
+            <div style="margin-bottom:0.5rem;">
+                <img src="{{ url_for('static', filename='images/founders/' + edit_founder.image) }}"
+                     alt="" style="width:64px;height:64px;object-fit:cover;border-radius:50%;border:1px solid #e0e0e0;">
+            </div>
+            {% endif %}
+            {{ form.image(class='form-control form-file', accept='image/jpeg,image/png,image/webp,image/gif') }}
+        </div>
+        <div class="form-group">{{ form.sort_order.label }}{{ form.sort_order(class='form-control') }}</div>
+        <button type="submit" class="btn btn--primary">{{ form.submit.label.text }}</button>
+        {% if edit_founder %}
+        <a href="{{ url_for('admin.founders') }}" class="btn btn--outline">Cancel</a>
+        {% endif %}
+    </form>
+</div>
+<table class="admin-table">
+    <thead>
+        <tr><th>Photo</th><th>Name</th><th>Role</th><th>Order</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        {% for f in founders %}
+        <tr>
+            <td>
+                {% if f.image %}
+                <img src="{{ url_for('static', filename='images/founders/' + f.image) }}" alt=""
+                     width="40" height="40" style="object-fit:cover;border-radius:50%;">
+                {% else %}
+                <span style="display:inline-flex;width:40px;height:40px;border-radius:50%;background:#EAF7EE;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#087A3A;">
+                    {{ f.name[0] }}
+                </span>
+                {% endif %}
+            </td>
+            <td>{{ f.name }}</td>
+            <td>{{ f.role or '—' }}</td>
+            <td>{{ f.sort_order }}</td>
+            <td style="white-space:nowrap;">
+                <a href="{{ url_for('admin.edit_founder', fid=f.id) }}" class="btn btn--outline btn-sm">Edit</a>
+                <form method="POST" action="{{ url_for('admin.delete_founder', fid=f.id) }}" style="display:inline;" data-confirm="Remove this founder?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn--outline btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="color:#66736A;">No founders listed.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
