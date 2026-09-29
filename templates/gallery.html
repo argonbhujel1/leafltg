@@ -21,12 +21,12 @@
             {% for img in images %}
             <div class="gallery-item reveal"
                  data-category="{{ img.category }}"
-                 data-full="{{ url_for('static', filename='images/gallery/' + img.image) }}"
+                 data-full="{{ img.image if img.image.startswith('http') else url_for('static', filename='images/gallery/' + img.image) }}"
                  data-title="{{ img.title or '' }}"
                  tabindex="0"
                  role="button"
                  aria-label="{{ img.title or 'Gallery image' }}">
-                <img src="{{ url_for('static', filename='images/gallery/' + img.image) }}"
+                <img src="{{ img.image if img.image.startswith('http') else url_for('static', filename='images/gallery/' + img.image) }}"
                      alt="{{ img.title or 'Leaf Letang gallery image' }}"
                      loading="lazy"
                      width="400" height="300">
@@ -47,3 +47,4 @@
     <img src="" alt="">
 </div>
 {% endblock %}
+

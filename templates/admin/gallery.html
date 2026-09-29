@@ -29,7 +29,7 @@
         {% for g in images %}
         <tr>
             <td>
-                <img src="{{ url_for('static', filename='images/gallery/' + g.image) }}"
+                <img src="{{ g.image if g.image.startswith('http') else url_for('static', filename='images/gallery/' + g.image) }}"
                      alt="" width="64" height="48"
                      style="object-fit:cover;border-radius:6px;border:1px solid #e0e0e0;">
             </td>
@@ -49,3 +49,4 @@
     </tbody>
 </table>
 {% endblock %}
+
