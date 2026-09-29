@@ -56,10 +56,6 @@ def create_app(config_class=Config):
             response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
 
-    with app.app_context():
-        db.create_all()
-        ensure_schema()
-        seed_data()
 
     return app
 
@@ -129,3 +125,6 @@ app = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+

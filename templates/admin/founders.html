@@ -18,7 +18,7 @@
             {{ form.image.label }}
             {% if edit_founder and edit_founder.image %}
             <div style="margin-bottom:0.5rem;">
-                <img src="{{ url_for('static', filename='images/founders/' + edit_founder.image) }}"
+                <img src="{{ edit_founder.image if edit_founder.image.startswith('http') else url_for('static', filename='images/founders/' + edit_founder.image) }}"
                      alt="" style="width:64px;height:64px;object-fit:cover;border-radius:50%;border:1px solid #e0e0e0;">
             </div>
             {% endif %}
@@ -40,7 +40,7 @@
         <tr>
             <td>
                 {% if f.image %}
-                <img src="{{ url_for('static', filename='images/founders/' + f.image) }}" alt=""
+                <img src="{{ f.image if f.image.startswith('http') else url_for('static', filename='images/founders/' + f.image) }}" alt=""
                      width="40" height="40" style="object-fit:cover;border-radius:50%;">
                 {% else %}
                 <span style="display:inline-flex;width:40px;height:40px;border-radius:50%;background:#EAF7EE;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#087A3A;">
@@ -65,3 +65,4 @@
     </tbody>
 </table>
 {% endblock %}
+

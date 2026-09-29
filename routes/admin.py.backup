@@ -14,47 +14,26 @@ from wtforms.validators import DataRequired, Length, Optional
 from werkzeug.utils import secure_filename
 import os
 import uuid
-import cloudinary
-import cloudinary.uploader
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-def _save_upload(file_storage, folder_key=None, prefix='file'):
-    """Upload image to Cloudinary and return its secure URL."""
+def _save_upload(file_storage, folder_key, prefix='file'):
+    """Save uploaded image; returns filename or None."""
     if not file_storage or not getattr(file_storage, 'filename', None):
         return None
-
     original = secure_filename(file_storage.filename or '')
     if not original:
         return None
-
     ext = original.rsplit('.', 1)[-1].lower() if '.' in original else 'jpg'
-
-    allowed = current_app.config.get(
-        'ALLOWED_EXTENSIONS',
-        {'png', 'jpg', 'jpeg', 'webp', 'gif'}
-    )
-
+    allowed = current_app.config.get('ALLOWED_EXTENSIONS', {'png', 'jpg', 'jpeg', 'webp', 'gif'})
     if ext not in allowed:
         return None
+    upload_dir = current_app.config.get(folder_key)
+    os.makedirs(upload_dir, exist_ok=True)
+    filename = f"{prefix}-{uuid.uuid4().hex[:12]}.{ext}"
+    file_storage.save(os.path.join(upload_dir, filename))
+    return filename
 
-    cloudinary.config(
-        cloud_name=current_app.config.get('CLOUDINARY_CLOUD_NAME'),
-        api_key=current_app.config.get('CLOUDINARY_API_KEY'),
-        api_secret=current_app.config.get('CLOUDINARY_API_SECRET'),
-        secure=True,
-    )
-
-    try:
-        result = cloudinary.uploader.upload(
-            file_storage,
-            folder=f'leaf-letang/{prefix}',
-            resource_type='image'
-        )
-        return result.get('secure_url')
-    except Exception:
-        current_app.logger.exception('Cloudinary upload failed')
-        return None
 
 def _delete_upload(filename, folder_key):
     if not filename:
@@ -246,12 +225,14 @@ def products():
         if existing:
             flash('A product with this slug already exists.', 'error')
         else:
-            image_url = _save_upload(form.image.data, 'PRODUCTS_UPLOAD_FOLDER', 'product')
+            filename = _save_upload(form.image.data, 'PRODUCTS_UPLOAD_FOLDER', 'product')
+            # Store path relative to static/images/ for public templates
+            image_path = f'products/{filename}' if filename else ''
             p = Product(
                 name=form.name.data.strip(),
                 slug=slug,
                 description=form.description.data or '',
-                image=image_url or '',
+                image=image_path,
                 is_active=form.is_active.data,
                 sort_order=int(form.sort_order.data or 0),
             )
@@ -282,9 +263,12 @@ def edit_product(pid):
             p.description = form.description.data or ''
             p.is_active = form.is_active.data
             p.sort_order = int(form.sort_order.data or 0)
-            image_url = _save_upload(form.image.data, 'PRODUCTS_UPLOAD_FOLDER', 'product')
-            if image_url:
-                p.image = image_url
+            filename = _save_upload(form.image.data, 'PRODUCTS_UPLOAD_FOLDER', 'product')
+            if filename:
+                # delete old file if it was under products/
+                if p.image and p.image.startswith('products/'):
+                    _delete_upload(p.image.replace('products/', '', 1), 'PRODUCTS_UPLOAD_FOLDER')
+                p.image = f'products/{filename}'
             db.session.commit()
             flash('Product updated.', 'success')
             return redirect(url_for('admin.products'))
@@ -325,15 +309,13 @@ def gallery():
         if ext not in current_app.config.get('ALLOWED_EXTENSIONS', {'png', 'jpg', 'jpeg', 'webp', 'gif'}):
             flash('File type not allowed.', 'error')
             return redirect(url_for('admin.gallery'))
-        image_url = _save_upload(form.image.data, 'UPLOAD_FOLDER', 'gallery')
-
-        if not image_url:
-            flash('Image upload failed.', 'error')
-            return redirect(url_for('admin.gallery'))
-
+        filename = f"{uuid.uuid4().hex[:12]}.{ext}"
+        upload_dir = current_app.config.get('UPLOAD_FOLDER')
+        os.makedirs(upload_dir, exist_ok=True)
+        f.save(os.path.join(upload_dir, filename))
         g = GalleryImage(
             title=(form.title.data or '').strip(),
-            image=image_url,
+            image=filename,
             category=form.category.data,
         )
         db.session.add(g)
@@ -367,11 +349,11 @@ def delete_gallery(gid):
 def founders():
     form = FounderForm()
     if form.validate_on_submit():
-        image_url = _save_upload(form.image.data, 'FOUNDERS_UPLOAD_FOLDER', 'founder')
+        filename = _save_upload(form.image.data, 'FOUNDERS_UPLOAD_FOLDER', 'founder')
         f = Founder(
             name=form.name.data.strip(),
             role=(form.role.data or '').strip(),
-            image=image_url or '',
+            image=filename,
             sort_order=int(form.sort_order.data or 0),
         )
         db.session.add(f)
@@ -392,9 +374,10 @@ def edit_founder(fid):
         f.name = form.name.data.strip()
         f.role = (form.role.data or '').strip()
         f.sort_order = int(form.sort_order.data or 0)
-        image_url = _save_upload(form.image.data, 'FOUNDERS_UPLOAD_FOLDER', 'founder')
-        if image_url:
-            f.image = image_url
+        filename = _save_upload(form.image.data, 'FOUNDERS_UPLOAD_FOLDER', 'founder')
+        if filename:
+            _delete_upload(f.image, 'FOUNDERS_UPLOAD_FOLDER')
+            f.image = filename
         db.session.commit()
         flash('Founder updated.', 'success')
         return redirect(url_for('admin.founders'))
@@ -432,12 +415,25 @@ def homepage():
             flash('File type not allowed.', 'error')
             return redirect(url_for('admin.homepage'))
 
-        image_url = _save_upload(form.image.data, 'HERO_UPLOAD_FOLDER', 'hero')
+        upload_dir = current_app.config.get('HERO_UPLOAD_FOLDER')
+        os.makedirs(upload_dir, exist_ok=True)
+
+        # Remove old file if present
+        if current_hero:
+            old_path = os.path.join(upload_dir, current_hero)
+            if os.path.isfile(old_path):
+                try:
+                    os.remove(old_path)
+                except OSError:
+                    pass
+
+        filename = f"hero-{uuid.uuid4().hex[:10]}.{ext}"
+        f.save(os.path.join(upload_dir, filename))
 
         if setting:
-            setting.value = image_url
+            setting.value = filename
         else:
-            db.session.add(SiteSetting(key='hero_image', value=image_url))
+            db.session.add(SiteSetting(key='hero_image', value=filename))
         db.session.commit()
         flash('Hero image updated. It now appears on the public homepage.', 'success')
         return redirect(url_for('admin.homepage'))
@@ -490,11 +486,3 @@ def delete_setting(sid):
     db.session.commit()
     flash('Setting deleted.', 'success')
     return redirect(url_for('admin.settings'))
-
-
-
-
-
-
-
-

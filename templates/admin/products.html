@@ -19,7 +19,7 @@
             {{ form.image.label }}
             {% if edit_product and edit_product.image %}
             <div style="margin-bottom:0.5rem;">
-                <img src="{{ url_for('static', filename='images/' + edit_product.image) }}"
+                <img src="{{ edit_product.image if edit_product.image.startswith('http') else url_for('static', filename='images/' + edit_product.image) }}"
                      alt="" style="max-height:80px;border-radius:6px;border:1px solid #e0e0e0;">
             </div>
             {% endif %}
@@ -42,7 +42,7 @@
         <tr>
             <td>
                 {% if p.image %}
-                <img src="{{ url_for('static', filename='images/' + p.image) }}" alt="" width="48" height="36"
+                <img src="{{ p.image if p.image.startswith('http') else url_for('static', filename='images/' + p.image) }}" alt="" width="48" height="36"
                      style="object-fit:cover;border-radius:4px;">
                 {% else %}—{% endif %}
             </td>
@@ -68,3 +68,4 @@
     </tbody>
 </table>
 {% endblock %}
+

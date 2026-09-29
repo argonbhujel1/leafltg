@@ -9,6 +9,12 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'instance', 'leaf_letang.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+        'pool_size': 2,
+        'max_overflow': 0,
+    }
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None
     SESSION_COOKIE_SECURE = os.environ.get('FLASK_ENV') == 'production'
@@ -46,3 +52,4 @@ class Config:
     PRODUCTS_UPLOAD_FOLDER = os.path.join(basedir, 'static', 'images', 'products')
     MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+

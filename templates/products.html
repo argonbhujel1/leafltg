@@ -15,7 +15,7 @@
         <article class="reveal" class="product-detail-row" style="margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid var(--border);">
             <div class="product-card__img" style="border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;">
                 {% if product.image %}
-                <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;">
+                <img src="{{ product.image if product.image.startswith('http') else url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;">
                 {% else %}
                 <div style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--light-green);color:var(--dark-green);font-weight:600;">{{ product.name }}</div>
                 {% endif %}
@@ -66,3 +66,4 @@
     </div>
 </section>
 {% endblock %}
+
