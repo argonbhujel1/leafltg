@@ -6,7 +6,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+
+    if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace(
+            'postgres://',
+            'postgresql+psycopg2://',
+            1
+        )
+
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL or \
         'sqlite:///' + os.path.join(basedir, 'instance', 'leaf_letang.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -23,6 +32,11 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(hours=8)
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
     ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH')
+
+    # Cloudinary image storage
+    CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+    CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+    CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
 
     # Company configuration — only verified / placeholder fields
     COMPANY_NAME = 'Leaf Letang Enterprises'
@@ -52,4 +66,6 @@ class Config:
     PRODUCTS_UPLOAD_FOLDER = os.path.join(basedir, 'static', 'images', 'products')
     MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+
+
 

@@ -1,12 +1,13 @@
 import os
-from flask import Flask, render_template
 from dotenv import load_dotenv
+load_dotenv()
+
+from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 from config import Config
 from models import db, Product, Founder, GalleryImage
 from routes import main_bp, contact_bp, admin_bp
 
-load_dotenv()
 csrf = CSRFProtect()
 
 
@@ -125,6 +126,7 @@ app = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
 
 
